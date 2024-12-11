@@ -8,14 +8,14 @@
 import Foundation
 
 protocol ProductsViewProtocol: AnyObject{
-    func getData(list : [Any])
+    func getData(list : ProductModel)
 }
 
 
 
 class ProductsPresenter {
     
-    private var productsList: [Any] = []
+//    private var productsList: ProductModel = []
 
     var provider: ProductsProviderProtocol
     weak var delegate : ProductsViewProtocol?
@@ -33,19 +33,17 @@ class ProductsPresenter {
         
     }
     
-    
+    @MainActor
     func getProducts() async {
         
-        productsList.removeAll()
+//        productsList.removeAll()
         
         do{
             let products = try await provider.getProducts()
             
-            productsList.append(products)
-            
-            delegate?.getData(list: productsList)
+//            productsList = products
+            delegate?.getData(list: products)
         }catch{
-            
             print(error)
         }
     }

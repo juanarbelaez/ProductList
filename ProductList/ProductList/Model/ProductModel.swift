@@ -20,7 +20,7 @@ import Foundation
 
 
 // MARK: - ProductModelElement
-struct ProductDetail: Codable {
+struct ProductModelElement: Decodable {
     let id: Int
     let title: String
     let price: Double
@@ -29,7 +29,7 @@ struct ProductDetail: Codable {
     let image: String
 }
 
-enum Category: String, Codable {
+enum Category: String, Decodable {
     case electronics = "electronics"
     case jewelery = "jewelery"
     case menSClothing = "men's clothing"
@@ -37,5 +37,5 @@ enum Category: String, Codable {
 }
 
 
-typealias ProductModel = [ProductDetail]
 
+typealias ProductModel = [ProductModelElement]
