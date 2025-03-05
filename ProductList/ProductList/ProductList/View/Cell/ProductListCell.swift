@@ -13,15 +13,11 @@ import UIKit
 
 class ProductListCell: UITableViewCell{
     
+    let viewCell = UIView()
     let productImage = UIImageView()
     let nombreLabel = UILabel()
     let categoriaLabel = UILabel()
     let precioLabel = UILabel()
-    
-    
-    let stackViewH = UIStackView()
-    let stackViewV = UIStackView()
-
     
     static let reuseID = "ProductListCell"
     static let rowHeight: CGFloat = 160
@@ -29,6 +25,8 @@ class ProductListCell: UITableViewCell{
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        contentView.backgroundColor = .systemGray5
         setup()
         layout()
     }
@@ -41,9 +39,18 @@ class ProductListCell: UITableViewCell{
 extension ProductListCell {
     private func setup(){
         
+        viewCell.backgroundColor = .white
+        viewCell.translatesAutoresizingMaskIntoConstraints = false
+        viewCell.layer.cornerRadius = 10
+        viewCell.clipsToBounds = true
+    
         productImage.translatesAutoresizingMaskIntoConstraints = false
         productImage.image = UIImage(named: "product-placeholder")
         productImage.contentMode = .scaleAspectFit
+        productImage.layer.cornerRadius = 10
+        productImage.clipsToBounds = true
+        
+        
         
         nombreLabel.translatesAutoresizingMaskIntoConstraints = false
         nombreLabel.text = "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops"
@@ -57,35 +64,46 @@ extension ProductListCell {
         categoriaLabel.font = UIFont.systemFont(ofSize: 13)
         
         precioLabel.translatesAutoresizingMaskIntoConstraints = false
-        precioLabel.text = "109.99"
-        precioLabel.textAlignment = .left
-        precioLabel.font = UIFont.boldSystemFont(ofSize: 15)
+        precioLabel.text = "$109.99"
+        precioLabel.textAlignment = .center
+        precioLabel.font = UIFont.boldSystemFont(ofSize: 18)
+        precioLabel.layer.cornerRadius = 10
+        precioLabel.clipsToBounds = true
+        precioLabel.backgroundColor = .systemGray3
         
-        stackViewH.translatesAutoresizingMaskIntoConstraints = false
-        stackViewH.axis = .horizontal
-        stackViewH.spacing = 15
         
-        stackViewV.translatesAutoresizingMaskIntoConstraints = false
-        stackViewV.axis = .vertical
-        stackViewV.spacing = 10
+        
+        
     }
     private func layout() {
         
-        stackViewV.addArrangedSubview(nombreLabel)
-        stackViewV.addArrangedSubview(categoriaLabel)
-        stackViewV.addArrangedSubview(precioLabel)
+        contentView.addSubview(viewCell)
+        viewCell.addSubview(productImage)
+        viewCell.addSubview(nombreLabel)
+        viewCell.addSubview(categoriaLabel)
+        viewCell.addSubview(precioLabel)
         
-        stackViewH.addArrangedSubview(productImage)
-        stackViewH.addArrangedSubview(stackViewV)
-        
-        contentView.addSubview(stackViewH)
-        
+   
+
         NSLayoutConstraint.activate([
-            stackViewH.topAnchor.constraint(equalToSystemSpacingBelow: topAnchor, multiplier: 3),
-            stackViewH.leadingAnchor.constraint(equalToSystemSpacingAfter: leadingAnchor, multiplier: 2),
-            trailingAnchor.constraint(equalToSystemSpacingAfter: stackViewH.trailingAnchor, multiplier: 2),
-            bottomAnchor.constraint(equalToSystemSpacingBelow: stackViewH.bottomAnchor, multiplier: 3),
-            productImage.widthAnchor.constraint(equalToConstant: 128)
+            viewCell.topAnchor.constraint(equalToSystemSpacingBelow: topAnchor, multiplier: 1),
+            viewCell.leadingAnchor.constraint(equalToSystemSpacingAfter: leadingAnchor, multiplier: 1),
+            trailingAnchor.constraint(equalToSystemSpacingAfter: viewCell.trailingAnchor, multiplier: 1),
+            bottomAnchor.constraint(equalToSystemSpacingBelow: viewCell.bottomAnchor, multiplier: 1),
+            productImage.topAnchor.constraint(equalToSystemSpacingBelow: viewCell.topAnchor, multiplier: 2),
+            productImage.leadingAnchor.constraint(equalToSystemSpacingAfter: viewCell.leadingAnchor, multiplier: 2),
+            productImage.widthAnchor.constraint(equalToConstant: 120),
+            productImage.heightAnchor.constraint(equalToConstant: 120),
+            nombreLabel.topAnchor.constraint(equalToSystemSpacingBelow: viewCell.topAnchor, multiplier: 2),
+            nombreLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: productImage.trailingAnchor, multiplier: 1),
+            viewCell.trailingAnchor.constraint(equalToSystemSpacingAfter: nombreLabel.trailingAnchor, multiplier: 2),
+            categoriaLabel.topAnchor.constraint(equalToSystemSpacingBelow: nombreLabel.bottomAnchor, multiplier: 1),
+            categoriaLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: productImage.trailingAnchor, multiplier: 1),
+            viewCell.trailingAnchor.constraint(equalToSystemSpacingAfter: categoriaLabel.trailingAnchor, multiplier: 2),
+            viewCell.bottomAnchor.constraint(equalToSystemSpacingBelow: precioLabel.bottomAnchor, multiplier: 1),
+            viewCell.trailingAnchor.constraint(equalToSystemSpacingAfter: precioLabel.trailingAnchor, multiplier: 1),
+            precioLabel.heightAnchor.constraint(equalToConstant: 48),
+            precioLabel.widthAnchor.constraint(equalToConstant: 96)
         ])
     }
 }

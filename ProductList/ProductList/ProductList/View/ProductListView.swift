@@ -16,7 +16,7 @@ class ProductListView: UIViewController {
     
     override func viewDidLoad(){
         super.viewDidLoad()
-    
+        view.backgroundColor = .systemGray4
         setup()
         
     }
@@ -37,6 +37,9 @@ extension ProductListView {
         tableView.rowHeight = ProductListCell.rowHeight
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = .systemGray6
+        
         view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
