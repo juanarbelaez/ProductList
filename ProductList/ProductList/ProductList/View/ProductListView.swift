@@ -10,13 +10,15 @@ import UIKit
 import UIKit
 
 class ProductListView: UIViewController {
-
+    
+    
     var tableView = UITableView()
     
     override func viewDidLoad(){
         super.viewDidLoad()
-        
+    
         setup()
+        
     }
 }
 
@@ -46,7 +48,9 @@ extension ProductListView {
     }
     
     private func setupNavigationBar(){
+        title = "Products"
         
+
     }
 }
 

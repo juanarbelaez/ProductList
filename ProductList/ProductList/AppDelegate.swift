@@ -15,8 +15,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
-        window?.backgroundColor = .lightGray
-        window?.rootViewController = productListView
+        window?.backgroundColor = .systemBackground
+        
+        let navigationController = UINavigationController(rootViewController: productListView)
+        window?.rootViewController = navigationController
+        
+        navigationController.navigationBar.prefersLargeTitles = true
         
         return true
     }
