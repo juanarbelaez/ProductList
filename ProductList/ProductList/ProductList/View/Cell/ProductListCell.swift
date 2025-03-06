@@ -53,18 +53,18 @@ extension ProductListCell {
         
         
         nombreLabel.translatesAutoresizingMaskIntoConstraints = false
-        nombreLabel.text = "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops"
+//        nombreLabel.text = "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops"
         nombreLabel.textAlignment = .left
         nombreLabel.font = UIFont.boldSystemFont(ofSize:18)
         nombreLabel.numberOfLines = 4
         
         categoriaLabel.translatesAutoresizingMaskIntoConstraints = false
-        categoriaLabel.text = "Men's clothing"
+//        categoriaLabel.text = "Men's clothing"
         categoriaLabel.textAlignment = .left
         categoriaLabel.font = UIFont.systemFont(ofSize: 13)
         
         precioLabel.translatesAutoresizingMaskIntoConstraints = false
-        precioLabel.text = "$109.99"
+//        precioLabel.text = "$109.99"
         precioLabel.textAlignment = .center
         precioLabel.font = UIFont.boldSystemFont(ofSize: 18)
         precioLabel.layer.cornerRadius = 10
@@ -105,5 +105,13 @@ extension ProductListCell {
             precioLabel.heightAnchor.constraint(equalToConstant: 48),
             precioLabel.widthAnchor.constraint(equalToConstant: 96)
         ])
+    }
+    
+    func configure(model: ProductViewModel){
+        
+//        productImage.kf.setImage(with: URL(string: model.productImageUrl))
+        nombreLabel.text = model.productName
+        categoriaLabel.text = model.productCategory
+        precioLabel.text = String(model.productPrice)
     }
 }

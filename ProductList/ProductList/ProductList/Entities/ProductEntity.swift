@@ -23,5 +23,4 @@ struct ProductEntity: Decodable {
     }
 }
 
-
 typealias ProductResponseEntity = [ProductEntity]

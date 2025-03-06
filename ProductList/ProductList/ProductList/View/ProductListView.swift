@@ -11,14 +11,24 @@ import UIKit
 
 class ProductListView: UIViewController {
     
-    
+    private let presenter: ProductListPresentable
+
     var tableView = UITableView()
+    
+    init(presenter: ProductListPresentable) {
+        self.presenter = presenter
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad(){
         super.viewDidLoad()
         view.backgroundColor = .systemGray4
         setup()
-        
+        presenter.onViewAppear()
     }
 }
 
@@ -51,10 +61,19 @@ extension ProductListView {
     }
     
     private func setupNavigationBar(){
-        title = "Products"
         
-
+        title = "Products"
     }
+}
+
+extension ProductListView: ProductListUI {
+    func update(products: [ProductViewModel]) {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
+    
 }
 
 extension ProductListView: UITableViewDelegate {
@@ -65,11 +84,14 @@ extension ProductListView: UITableViewDelegate {
 
 extension ProductListView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return presenter.productViewModels.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ProductListCell.reuseID, for: indexPath)  as! ProductListCell
+        let model = presenter.productViewModels[indexPath.row]
+        cell.configure(model: model)
+
         return cell
     }
 }
