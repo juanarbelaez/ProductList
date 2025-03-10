@@ -45,6 +45,9 @@ class ProductDetailView: UIViewController {
 }
 
 extension ProductDetailView {
+    
+    
+    
     func style(){
         
         view.backgroundColor = .white
@@ -127,7 +130,7 @@ extension ProductDetailView {
         view.addSubview(stackViewButtons)
         
         NSLayoutConstraint.activate([
-            stackview.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 8),
+            stackview.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 6),
             stackview.leadingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.leadingAnchor, multiplier: 4),
             view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: stackview.trailingAnchor, multiplier: 4),
             divider.heightAnchor.constraint(equalToConstant: 4),

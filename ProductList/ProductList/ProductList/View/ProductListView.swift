@@ -78,6 +78,7 @@ extension ProductListView {
     private func setupNavigationBar(){
         
         title = "Products"
+        
     }
 }
 

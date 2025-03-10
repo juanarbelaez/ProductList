@@ -29,7 +29,7 @@ class ProductDetailRouter: ProductDetailRouting {
         productDetailView = ProductDetailView(presenter: productDetailPresenter)
         productDetailPresenter.ui = productDetailView
         
-        fromViewController.present(productDetailView!, animated: true)
+        fromViewController.navigationController?.pushViewController(productDetailView!, animated: true)
     }
 }
     
