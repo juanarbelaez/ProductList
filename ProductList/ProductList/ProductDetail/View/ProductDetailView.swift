@@ -12,23 +12,60 @@ class ProductDetailView: UIViewController {
     
     let stackview = UIStackView()
     let stackviewH = UIStackView()
+    let stackViewButtons = UIStackView()
     
-    let productImageVIew = UIImageView()
+    let editButton = UIButton()
+    let deleteButton = UIButton()
+    
+    let productImageView = UIImageView()
     let categoriaLabel = UILabel()
     let nombreLabel = UILabel()
     let precioLabel = UILabel()
     let descripcionLabel = UILabel()
     let divider = UIView()
     
+    
+    private let presenter: ProductDetailPresentable
+    
+    init(presenter: ProductDetailPresentable) {
+        self.presenter = presenter
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad(){
         super.viewDidLoad()
         style()
         layout()
+        presenter.onViewAppear()
     }
 }
 
 extension ProductDetailView {
     func style(){
+        
+        view.backgroundColor = .white
+        
+        stackViewButtons.translatesAutoresizingMaskIntoConstraints = false
+        stackViewButtons.axis = .horizontal
+        
+        editButton.translatesAutoresizingMaskIntoConstraints = false
+        editButton.configuration = .plain()
+        editButton.configuration?.image = UIImage(systemName: "square.and.pencil")?.withTintColor(.black, renderingMode: .alwaysOriginal)
+        editButton.configuration?.cornerStyle = .capsule
+        editButton.configuration?.buttonSize = .large
+        editButton.addTarget(self, action: #selector(editTapped), for: .primaryActionTriggered)
+        
+        deleteButton.translatesAutoresizingMaskIntoConstraints = false
+        deleteButton.configuration = .plain()
+        deleteButton.configuration?.image = UIImage(systemName: "trash")?.withTintColor(.black, renderingMode: .alwaysOriginal)
+        deleteButton.configuration?.cornerStyle = .capsule
+        deleteButton.configuration?.buttonSize = .large
+//        deleteButton.addTarget(self, action: #selector(deleteTapped), for: .primaryActionTriggered)
+        
         stackview.translatesAutoresizingMaskIntoConstraints = false
         stackview.axis = .vertical
         stackview.spacing = 15
@@ -39,35 +76,32 @@ extension ProductDetailView {
         
         divider.translatesAutoresizingMaskIntoConstraints = false
         divider.backgroundColor = .systemGray4
-//        divider.layer.cornerRadius = 10
-//        divider.clipsToBounds = true
-        
-        productImageVIew.translatesAutoresizingMaskIntoConstraints = false
-        productImageVIew.image = UIImage(named: "product-placeholder")
-        productImageVIew.contentMode = .scaleAspectFit
-//        productImageVIew.layer.cornerRadius = 10
-//        productImageVIew.clipsToBounds = true
+
+        productImageView.translatesAutoresizingMaskIntoConstraints = false
+//        productImageVIew.image = UIImage(named: "product-placeholder")
+        productImageView.contentMode = .scaleAspectFit
+
 
         nombreLabel.translatesAutoresizingMaskIntoConstraints = false
-        nombreLabel.text = "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops"
+        nombreLabel.text = ""
         nombreLabel.textAlignment = .left
         nombreLabel.font = UIFont.boldSystemFont(ofSize:24)
         nombreLabel.numberOfLines = 4
         
         categoriaLabel.translatesAutoresizingMaskIntoConstraints = false
-        categoriaLabel.text = "Men's clothing"
+        categoriaLabel.text = ""
         categoriaLabel.textColor = .label
         categoriaLabel.textAlignment = .left
         categoriaLabel.font = UIFont.systemFont(ofSize: 16)
         
         precioLabel.translatesAutoresizingMaskIntoConstraints = false
-        precioLabel.text = "$109.99"
+        precioLabel.text = ""
         precioLabel.textAlignment = .center
         precioLabel.font = UIFont.boldSystemFont(ofSize: 24)
       
         
         descripcionLabel.translatesAutoresizingMaskIntoConstraints = false
-        descripcionLabel.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        descripcionLabel.text = ""
         descripcionLabel.textAlignment = .justified
         descripcionLabel.numberOfLines = 0
         descripcionLabel.font = UIFont.systemFont(ofSize: 16)
@@ -75,12 +109,14 @@ extension ProductDetailView {
     }
     func layout(){
         
+        stackViewButtons.addArrangedSubview(editButton)
+        stackViewButtons.addArrangedSubview(deleteButton)
         
         stackviewH.addArrangedSubview(categoriaLabel)
         stackviewH.addArrangedSubview(precioLabel)
         
         
-        stackview.addArrangedSubview(productImageVIew)
+        stackview.addArrangedSubview(productImageView)
         stackview.addArrangedSubview(divider)
         stackview.addArrangedSubview(stackviewH)
         stackview.addArrangedSubview(nombreLabel)
@@ -88,16 +124,56 @@ extension ProductDetailView {
        
         
         view.addSubview(stackview)
+        view.addSubview(stackViewButtons)
         
         NSLayoutConstraint.activate([
-            stackview.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 5),
+            stackview.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 8),
             stackview.leadingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.leadingAnchor, multiplier: 4),
             view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: stackview.trailingAnchor, multiplier: 4),
-//            view.safeAreaLayoutGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: stackview.bottomAnchor, multiplier: 1),
-            divider.widthAnchor.constraint(equalToConstant: 60),
             divider.heightAnchor.constraint(equalToConstant: 4),
-            productImageVIew.widthAnchor.constraint(equalToConstant: 300),
-            productImageVIew.heightAnchor.constraint(equalToConstant: 300),
+            productImageView.heightAnchor.constraint(equalToConstant: 300),
+            stackViewButtons.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 1),
+            view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: stackViewButtons.trailingAnchor, multiplier: 1)
         ])
     }
+}
+
+
+extension ProductDetailView: ProductDetailUI{
+    func update(productDetail: ProductDetailViewModel) {
+        
+        guard let url = URL(string: productDetail.productImageUrl) else { return }
+        getImage(url: url) { img in
+            self.productImageView.image = img
+        }
+        
+        categoriaLabel.text = productDetail.productCategory
+        nombreLabel.text = productDetail.productName
+        precioLabel.text = "$\(productDetail.productPrice)"
+        descripcionLabel.text = productDetail.productDescription
+    
+    }
+    
+    func getImage(url: URL, completion: @escaping (UIImage?) -> Void) {
+        
+            URLSession.shared.dataTask(with: url) { data, response, error in
+                DispatchQueue.main.async {
+                    if let data = data, let img = UIImage(data: data) {
+                        completion(img)
+                    } else {
+                        completion(nil)
+                    }
+                }
+            }.resume()
+        }
+}
+
+// MARK: - Actions
+
+extension ProductDetailView {
+    
+    @objc func editTapped (sender: UIButton) {
+//        TODO: - Enlace a  editar producto
+    }
+    
 }

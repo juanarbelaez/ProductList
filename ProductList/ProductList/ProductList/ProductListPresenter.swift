@@ -52,6 +52,8 @@ class ProductListPresenter: ProductListPresentable {
     
     func onTapCell(atIndex: Int) {
         
+        let productId = models[atIndex].id
+        router.showDetailProduct(withProductId: productId.description)
     }
     
     func onTapNew() {

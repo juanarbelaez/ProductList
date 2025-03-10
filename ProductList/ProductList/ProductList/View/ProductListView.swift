@@ -14,6 +14,8 @@ class ProductListView: UIViewController {
     private let presenter: ProductListPresentable
 
     var tableView = UITableView()
+    let newProductButton = UIButton()
+    
     
     init(presenter: ProductListPresentable) {
         self.presenter = presenter
@@ -50,13 +52,26 @@ extension ProductListView {
         tableView.separatorStyle = .none
         tableView.backgroundColor = .systemGray6
         
+        newProductButton.translatesAutoresizingMaskIntoConstraints = false
+        newProductButton.configuration = .filled()
+        newProductButton.configuration?.image = UIImage(systemName: "plus")?.withTintColor(.black, renderingMode: .alwaysOriginal)
+        newProductButton.configuration?.cornerStyle = .capsule
+        newProductButton.configuration?.buttonSize = .large
+        newProductButton.addTarget(self, action: #selector(newProductTapped), for: .primaryActionTriggered)
+        newProductButton.tintColor = .systemGray4
+        
+
+        
         view.addSubview(tableView)
+        view.addSubview(newProductButton)
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            view.safeAreaLayoutGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: newProductButton.bottomAnchor, multiplier: 2),
+            view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: newProductButton.trailingAnchor, multiplier: 2)
         ])
     }
     
@@ -78,7 +93,7 @@ extension ProductListView: ProductListUI {
 
 extension ProductListView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        presenter.onTapCell(atIndex: indexPath.row)
     }
 }
 
@@ -93,6 +108,14 @@ extension ProductListView: UITableViewDataSource {
         cell.configure(model: model)
 
         return cell
+    }
+}
+
+// MARK: - Actions
+
+extension ProductListView {
+    @objc func newProductTapped (sender: UIButton) {
+//        TODO enlace a View NuevoProducto
     }
 }
 

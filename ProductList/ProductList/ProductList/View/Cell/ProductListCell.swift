@@ -26,7 +26,7 @@ class ProductListCell: UITableViewCell{
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        contentView.backgroundColor = .systemGray5
+        contentView.backgroundColor = .systemGray6
         setup()
         layout()
     }
@@ -45,7 +45,7 @@ extension ProductListCell {
         viewCell.clipsToBounds = true
     
         productImage.translatesAutoresizingMaskIntoConstraints = false
-        productImage.image = UIImage(named: "product-placeholder")
+//        productImage.image = UIImage(named: "product-placeholder")
         productImage.contentMode = .scaleAspectFit
         productImage.layer.cornerRadius = 10
         productImage.clipsToBounds = true
@@ -69,7 +69,7 @@ extension ProductListCell {
         precioLabel.font = UIFont.boldSystemFont(ofSize: 18)
         precioLabel.layer.cornerRadius = 10
         precioLabel.clipsToBounds = true
-        precioLabel.backgroundColor = .systemGray3
+        precioLabel.backgroundColor = .systemGray5
         
         
         
@@ -121,7 +121,8 @@ extension ProductListCell {
         
         nombreLabel.text = model.productName
         categoriaLabel.text = model.productCategory
-        precioLabel.text = String(model.productPrice)
+        let precioStr = String(model.productPrice)
+        precioLabel.text = "$\(precioStr)"
     }
     
     func getImage(url: URL, completion: @escaping (UIImage?) -> Void) {
