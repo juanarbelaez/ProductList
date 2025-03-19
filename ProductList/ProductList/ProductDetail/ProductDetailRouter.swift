@@ -10,26 +10,33 @@ import UIKit
 
 protocol ProductDetailRouting {
     
-//    var editRouter: EditRouting? { get }
+    var editProductRouter: EditProductRouting? { get }
     var productDetailView: ProductDetailView? { get }
     
     func showDetails(fromViewController: UIViewController, withProductId productId: String)
-//    func showEditDetails(withProductModel product: ProductDetailEntity)
+    func showEditDetails(withProductModel product: ProductDetailEntity)
 }
 
 
 class ProductDetailRouter: ProductDetailRouting {
-    
-    
+    var editProductRouter: EditProductRouting?
     var productDetailView: ProductDetailView?
     
     func showDetails(fromViewController: UIViewController, withProductId productId: String) {
+        self.editProductRouter = EditProductRouter()
         let productDetailInteractor = ProductDetailInteractor()
         let productDetailPresenter = ProductDetailPresenter(productId: productId, router: self, productDetailInteractor: productDetailInteractor)
         productDetailView = ProductDetailView(presenter: productDetailPresenter)
         productDetailPresenter.ui = productDetailView
         
         fromViewController.navigationController?.pushViewController(productDetailView!, animated: true)
+    }
+    
+    func showEditDetails(withProductModel product: ProductDetailEntity) {
+        guard let fromViewController = productDetailView else {
+            return
+        }
+        editProductRouter?.showEditDetails(fromViewController: fromViewController, withProduct: product)
     }
 }
     

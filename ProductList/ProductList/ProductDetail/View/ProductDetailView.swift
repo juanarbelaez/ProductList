@@ -60,7 +60,7 @@ extension ProductDetailView {
         editButton.configuration?.image = UIImage(systemName: "square.and.pencil")?.withTintColor(.black, renderingMode: .alwaysOriginal)
         editButton.configuration?.cornerStyle = .capsule
         editButton.configuration?.buttonSize = .large
-        editButton.addTarget(self, action: #selector(editTapped), for: .primaryActionTriggered)
+        editButton.addTarget(self, action: #selector(editTapped), for: .touchUpInside)
         
         deleteButton.translatesAutoresizingMaskIntoConstraints = false
         deleteButton.configuration = .plain()
@@ -106,7 +106,7 @@ extension ProductDetailView {
         descripcionLabel.translatesAutoresizingMaskIntoConstraints = false
         descripcionLabel.text = ""
         descripcionLabel.textAlignment = .justified
-        descripcionLabel.numberOfLines = 0
+        descripcionLabel.numberOfLines = 7
         descripcionLabel.font = UIFont.systemFont(ofSize: 16)
         
     }
@@ -177,6 +177,8 @@ extension ProductDetailView {
     
     @objc func editTapped (sender: UIButton) {
 //        TODO: - Enlace a  editar producto
+       
+        presenter.onTapEdit()
     }
     
 }

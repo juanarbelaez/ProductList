@@ -60,7 +60,7 @@ class ProductDetailPresenter: ProductDetailPresentable {
     }
     
     func onTapEdit() {
-        
+        router.showEditDetails(withProductModel: model)
     }
     
     
