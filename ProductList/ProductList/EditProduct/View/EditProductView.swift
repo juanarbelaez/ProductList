@@ -16,6 +16,9 @@ class EditProductView: UIViewController {
     let precioStackView = UIStackView()
     let categoriaStackView = UIStackView()
     
+    let cambiarImagenButton = UIButton()
+    let imagePicker = UIImagePickerController()
+    
     let productImageView = UIImageView()
     let nombreTextField = UITextField()
     let categoriaButton = UIButton()
@@ -45,6 +48,7 @@ class EditProductView: UIViewController {
     
     override func viewDidLoad(){
         super.viewDidLoad()
+        
         style()
         layout()
         presenter.onViewAppear()
@@ -54,6 +58,16 @@ class EditProductView: UIViewController {
 extension EditProductView {
     func style(){
         view.backgroundColor = .white
+        
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
+        
+        cambiarImagenButton.translatesAutoresizingMaskIntoConstraints = false
+        cambiarImagenButton.configuration = .plain()
+        cambiarImagenButton.configuration?.image = UIImage(systemName: "square.and.arrow.up")?.withTintColor(.black, renderingMode: .alwaysOriginal)
+        cambiarImagenButton.configuration?.cornerStyle = .capsule
+        cambiarImagenButton.configuration?.buttonSize = .large
+        cambiarImagenButton.addTarget(self, action: #selector(cambiarImagenTapped), for: .touchUpInside)
         
         stackview.translatesAutoresizingMaskIntoConstraints = false
         stackview.axis = .vertical
@@ -83,6 +97,7 @@ extension EditProductView {
         nombreTextField.layer.cornerRadius = 5
         nombreTextField.clipsToBounds = true
         nombreTextField.backgroundColor = .systemGray6
+        nombreTextField.tintColor = .black
         nombreTextField.borderStyle = .roundedRect
         
         precioLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -156,6 +171,7 @@ extension EditProductView {
         
         view.addSubview(stackview)
         view.addSubview(saveButton)
+        view.addSubview(cambiarImagenButton)
         
         NSLayoutConstraint.activate([
             stackview.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 6),
@@ -165,11 +181,14 @@ extension EditProductView {
             descripcionTextView.heightAnchor.constraint(equalToConstant: 194),
             saveButton.leadingAnchor.constraint(equalToSystemSpacingAfter: view.safeAreaLayoutGuide.leadingAnchor, multiplier: 2),
             view.safeAreaLayoutGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: saveButton.trailingAnchor, multiplier: 2),
-            view.safeAreaLayoutGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: saveButton.bottomAnchor, multiplier: 0)
+            view.safeAreaLayoutGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: saveButton.bottomAnchor, multiplier: 0),
+            cambiarImagenButton.topAnchor.constraint(equalToSystemSpacingBelow: productImageView.topAnchor, multiplier: 0),
+            productImageView.trailingAnchor.constraint(equalToSystemSpacingAfter: cambiarImagenButton.trailingAnchor, multiplier: 1)
         ])
     }
     
     func configureMenu() -> UIMenu {
+        
         let electronics = UIAction(title: "electronics") { action  in
             self.category = "electronics"
             self.categoriaButton.setTitle(self.category, for: [])
@@ -226,16 +245,49 @@ extension EditProductView: EditProductUI {
     
 }
 
+extension EditProductView: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+}
+
 //MARK: - Actions
 extension EditProductView {
     @objc func saveTapped(sender: UIButton) {
-//        let productDictionary : [String:AnyHashable] = [
-//            "title":nombreTextField.text!,
-//            "price": Double(precioTextField.text!)!,
-//            "description":descripcionTextView.text!,
-//            "image":"http://i.pravatar.cc",
-//            "category":category]
-//
+        
+        guard let imageData = productImageView.image!.jpegData(compressionQuality: 0.8)?.base64EncodedString() else { return}
+        let productDictionary : [String:AnyHashable] = [
+            "title":nombreTextField.text!,
+            "price": Double(precioTextField.text!)!,
+            "description":descripcionTextView.text!,
+            "image":imageData,
+            "category":category]
+
 //        presenter.onTapSave(productDictionary: productDictionary)
+    }
+    
+    @objc func cambiarImagenTapped(sender: UIButton){
+        
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                
+        alert.addAction(UIAlertAction(title: "Galería", style: .default, handler: { (button) in
+            self.imagePicker.sourceType = .photoLibrary
+            self.present(self.imagePicker, animated: true, completion: nil)
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cámara", style: .default, handler: { (button) in
+            self.imagePicker.sourceType = .camera
+            self.present(self.imagePicker, animated: true, completion: nil)
+        }))
+            
+        alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func imagePickerController (_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+       
+        guard let pickedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else { return }
+        
+        
+        productImageView.image = pickedImage
+        dismiss(animated: true, completion: nil)
     }
 }
