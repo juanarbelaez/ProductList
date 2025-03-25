@@ -45,11 +45,9 @@ class ProductDetailPresenter: ProductDetailPresentable {
             switch result {
             case .success(let model):
                 self.model = model
-                self.productDetailViewModel.productName = model.title
-                self.productDetailViewModel.productDescription = model.description
-                self.productDetailViewModel.productCategory = model.category.rawValue
-                self.productDetailViewModel.productPrice = String(model.price)
-                self.productDetailViewModel.productImageUrl = model.image
+                
+                
+                self.productDetailViewModel = self.mapEntityToViewModel(productDetailEntity: model)
                 
                 self.ui?.update(productDetail: self.productDetailViewModel)
             
@@ -62,6 +60,21 @@ class ProductDetailPresenter: ProductDetailPresentable {
     func onTapEdit() {
         router.showEditDetails(withProductModel: model)
     }
+    
+    
+    
+    func mapEntityToViewModel (productDetailEntity: ProductDetailEntity) -> ProductDetailViewModel {
+        
+        let price = String(productDetailEntity.price)
+        let productDetailViewModel = ProductDetailViewModel(productName: productDetailEntity.title, productDescription: productDetailEntity.description, productCategory: productDetailEntity.category.rawValue, productPrice: price, productImageUrl: productDetailEntity.image)
+        
+        return productDetailViewModel
+    }
+    
+    
+    
+    
+    
     
     
 }

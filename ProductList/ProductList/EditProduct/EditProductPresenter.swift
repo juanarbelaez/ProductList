@@ -9,8 +9,9 @@ import Foundation
 
 protocol EditProductUI: AnyObject {
     
-    func update(productToEdit: ProductDetailViewModel)
+    func update(productToEdit: EditProductViewModel)
     func update()
+    func dismissEditProductView()
 }
 
 protocol EditProductPresentable: AnyObject {
@@ -18,7 +19,7 @@ protocol EditProductPresentable: AnyObject {
     var productToEdit: ProductDetailEntity? { get }
     
     func onViewAppear()
-    func onTapSave(productDictionary : [String:AnyHashable])
+    func onTapSave(model : EditProductViewModel)
 }
 
 class EditProductPresenter: EditProductPresentable {
@@ -47,26 +48,45 @@ class EditProductPresenter: EditProductPresentable {
             
             let model = mapProduct(productToEdit: productToEdit!)
             self.ui?.update(productToEdit: model)
+        } else {
+            self.ui?.update()
         }
         
-        self.ui?.update()
-    }
-    
-    func mapProduct(productToEdit: ProductDetailEntity) -> ProductDetailViewModel {
         
-        let productDetailViewModel = ProductDetailViewModel(productName: productToEdit.title, productDescription: productToEdit.description, productCategory: productToEdit.category.rawValue, productPrice: String(productToEdit.price), productImageUrl: productToEdit.image)
-        return productDetailViewModel
     }
     
-    func onTapSave(productDictionary : [String:AnyHashable]) {
+    func mapProduct(productToEdit: ProductDetailEntity) -> EditProductViewModel {
+        
+        let editProductViewModel = EditProductViewModel(productName: productToEdit.title, productDescription: productToEdit.description, productCategory: productToEdit.category.rawValue, productPrice: String(productToEdit.price), productImageUrl: productToEdit.image)
+        return editProductViewModel
+    }
+    
+    func onTapSave(model : EditProductViewModel) {
         if productToEdit != nil {
             
-            let id = productToEdit!.id
-            interactor.updateProduct(withProductId: id, productDictionary: productDictionary)
+            
+            let productDictionary : [String:Any] = [
+                "id":productToEdit!.id,
+                "title":model.productName,
+                "price": Double(model.productPrice) as Any,
+                "description":model.productDescription,
+                "image":model.productImageUrl,
+                "category":model.productCategory]
+            
+            
+            interactor.updateProduct(productDictionary: productDictionary) { result  in
+                switch result {
+                case .success(let msg) :
+                    print(msg)
+                    self.ui?.dismissEditProductView()
+                case .failure (let error):
+                    print(error)
+                }
+            }
+        } else {
+//            interactor.setNewProduct(productDictionary: productDictionary)
         }
-        
-        interactor.setNewProduct(productDictionary: productDictionary)
-        
-//      TODO: - Mostrar alert con resultado de Update
     }
+    
+   
 }

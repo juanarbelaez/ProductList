@@ -19,8 +19,11 @@ protocol ProductDetailRouting {
 
 
 class ProductDetailRouter: ProductDetailRouting {
+    
     var editProductRouter: EditProductRouting?
     var productDetailView: ProductDetailView?
+    
+//    cambios
     
     func showDetails(fromViewController: UIViewController, withProductId productId: String) {
         self.editProductRouter = EditProductRouter()
@@ -38,6 +41,12 @@ class ProductDetailRouter: ProductDetailRouting {
         }
         editProductRouter?.showEditDetails(fromViewController: fromViewController, withProduct: product)
     }
+    
+   
+    
+    
+    
+    
 }
     
     

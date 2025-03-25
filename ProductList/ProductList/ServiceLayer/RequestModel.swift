@@ -17,6 +17,13 @@ struct RequestModel {
         return baseUrl.rawValue + endpoint.rawValue
     }
     
+    func getURL(withId id: String) -> String{
+        let url = baseUrl.rawValue + endpoint.rawValue
+        
+        return url+"/\(id)"
+    }
+    
+    
     enum HttpMethod: String{
         case GET
         case POST

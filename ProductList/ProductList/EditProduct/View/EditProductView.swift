@@ -211,11 +211,17 @@ extension EditProductView {
 }
 
 extension EditProductView: EditProductUI {
+    func dismissEditProductView() {
+        self.dismiss(animated: true)
+    }
+    
+    
+    
     func update() {
         //TODO: - Para creación de Nuevo Producto
     }
     
-    func update(productToEdit: ProductDetailViewModel) {
+    func update(productToEdit: EditProductViewModel) {
         
         guard let url = URL(string: productToEdit.productImageUrl) else { return }
         getImage(url: url) { img in
@@ -226,7 +232,6 @@ extension EditProductView: EditProductUI {
         nombreTextField.text = productToEdit.productName
         precioTextField.text = productToEdit.productPrice
         descripcionTextView.text = productToEdit.productDescription
-        //TODO: - Para Actualización de Producto
     }
     
     func getImage(url: URL, completion: @escaping (UIImage?) -> Void) {
@@ -247,6 +252,14 @@ extension EditProductView: EditProductUI {
 
 extension EditProductView: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    func imagePickerController (_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+       
+        guard let pickedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else { return }
+        
+        
+        productImageView.image = pickedImage
+        dismiss(animated: true, completion: nil)
+    }
 }
 
 //MARK: - Actions
@@ -254,14 +267,10 @@ extension EditProductView {
     @objc func saveTapped(sender: UIButton) {
         
         guard let imageData = productImageView.image!.jpegData(compressionQuality: 0.8)?.base64EncodedString() else { return}
-        let productDictionary : [String:AnyHashable] = [
-            "title":nombreTextField.text!,
-            "price": Double(precioTextField.text!)!,
-            "description":descripcionTextView.text!,
-            "image":imageData,
-            "category":category]
-
-//        presenter.onTapSave(productDictionary: productDictionary)
+        
+        let productoEditado: EditProductViewModel = EditProductViewModel(productName: nombreTextField.text!, productDescription: descripcionTextView.text!, productCategory: category, productPrice: precioTextField.text!, productImageUrl: imageData)
+        
+        presenter.onTapSave(model: productoEditado)
     }
     
     @objc func cambiarImagenTapped(sender: UIButton){
@@ -280,14 +289,5 @@ extension EditProductView {
             
         alert.addAction(UIAlertAction(title: "Cancelar", style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
-    }
-    
-    func imagePickerController (_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-       
-        guard let pickedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else { return }
-        
-        
-        productImageView.image = pickedImage
-        dismiss(animated: true, completion: nil)
     }
 }

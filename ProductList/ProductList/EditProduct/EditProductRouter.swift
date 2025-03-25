@@ -11,12 +11,11 @@ import UIKit
 protocol EditProductRouting {
     var editProductView: EditProductView? { get }
     
-    func showEditDetails (fromViewController: UIViewController, withProduct product: ProductDetailEntity )
+    func showEditDetails (fromViewController: UIViewController, withProduct product: ProductDetailEntity)
 }
     
 
 class EditProductRouter: EditProductRouting {
-
     var editProductView: EditProductView?
     
     func showEditDetails(fromViewController: UIViewController, withProduct product: ProductDetailEntity) {
@@ -27,9 +26,5 @@ class EditProductRouter: EditProductRouting {
         editProductPresenter.ui = editProductView
         
         fromViewController.present(editProductView!, animated: true)
-        
     }
-
-        
-    
 }
