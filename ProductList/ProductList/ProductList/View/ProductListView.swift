@@ -116,7 +116,7 @@ extension ProductListView: UITableViewDataSource {
 
 extension ProductListView {
     @objc func newProductTapped (sender: UIButton) {
-//        TODO enlace a View NuevoProducto
+        presenter.onTapNew()
     }
 }
 

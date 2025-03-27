@@ -57,6 +57,7 @@ class ProductListPresenter: ProductListPresentable {
     }
     
     func onTapNew() {
-        
+        let id = models.count
+        router.showNewProduct(withId: id)
     }
 }

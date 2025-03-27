@@ -10,25 +10,26 @@ import UIKit
 
 protocol ProductListRouting: AnyObject {
         var productDetailRouter: ProductDetailRouting? { get }
-//        var newProductRouter: NewProductRouting? { get }
+        var editProductRouter: EditProductRouting? { get }
         var productListView: ProductListView? { get }
         
         
         
         func showProductList(window: UIWindow?)
         func showDetailProduct(withProductId productId: String)
-//        func showNewProduct()
+    func showNewProduct(withId id: Int)
 }
 
 class ProductListRouter: ProductListRouting {
     
+    var editProductRouter: EditProductRouting?
     var productDetailRouter: ProductDetailRouting?
     var productListView: ProductListView?
     
     func showProductList(window: UIWindow?){
         
         self.productDetailRouter = ProductDetailRouter()
-//        self.newProductRouter = NewProductRouter()
+        self.editProductRouter = EditProductRouter()
         let interactor = ProductListInteractor()
         let presenter = ProductListPresenter(productListInteractor: interactor, router: self)
         
@@ -52,6 +53,9 @@ class ProductListRouter: ProductListRouting {
     }
     
     
-    
+    func showNewProduct(withId id: Int) {
+        guard let fromViewController = productListView else { return }
+        editProductRouter?.showNewProductDetails(fromViewController: fromViewController, id: id)
+    }
 }
 
