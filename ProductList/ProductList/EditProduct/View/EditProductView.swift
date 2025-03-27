@@ -33,6 +33,19 @@ class EditProductView: UIViewController {
     let precioLabel = UILabel()
     let descripcionLabel = UILabel()
     
+    lazy var alert : UIAlertController = {
+        let alert = UIAlertController(title: "", message: "", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] _ in
+            self?.okTapped()
+        }))
+                                        
+//                                        { [weak self] _ in
+//            self?.okTapped()
+//        }))
+        return alert
+    }()
+    
+    
     private let presenter: EditProductPresentable
     
     init(presenter: EditProductPresentable) {
@@ -208,6 +221,44 @@ extension EditProductView {
         let menu = UIMenu(children: [electronics, jewelery, mensClothing, womenClothing])
         return menu
     }
+    
+    func displayError(_ error: NetworkError) {
+        let titleAndMessage = titleAndMessage(for: error)
+        showErrorAlert( title: titleAndMessage.0 , message: titleAndMessage.1)
+    }
+    
+    func showSuccesAlert(msg: String){
+        alert.title = "Bien hecho!"
+        alert.message = msg
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func titleAndMessage(for error: NetworkError) -> (String, String) {
+        let title: String
+        let message: String
+        
+        switch error {
+        case .serverError:
+            title = "Server Error"
+            message = "Asegúrate de estar conectado a internet. Inténtalo de nuevo."
+        case .decodingError:
+            title = "Decoding Error"
+            message = "No pudimos procesar su solicitud. Inténtelo de nuevo."
+        }
+        return (title, message)
+    }
+    
+    func showErrorAlert(title: String, message: String) {
+       
+        alert.title = title
+        alert.message = message
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func okTapped() {
+        dismissEditProductView()
+    }
+    
 }
 
 extension EditProductView: EditProductUI {

@@ -74,15 +74,15 @@ class EditProductPresenter: EditProductPresentable {
                 "title":model.productName,
                 "price": Double(model.productPrice) as Any,
                 "description":model.productDescription,
-                "image":model.productImageUrl,
+                "image": "http://example.com",
                 "category":model.productCategory]
             
             interactor.updateProduct(productDictionary: productDictionary) { result  in
                 switch result {
                 case .success(let msg) :
-                    print(msg)
-                    self.ui?.dismissEditProductView()
+                    self.ui?.showSuccesAlert(msg: String(describing: msg))
                 case .failure (let error):
+                    self.ui?.displayError(error)
                     print(error)
                 }
             }
@@ -99,10 +99,9 @@ class EditProductPresenter: EditProductPresentable {
             interactor.setNewProduct(productDictionary: productDictionary) { result in
                 switch result {
                 case .success(let msg) :
-                    print(msg)
-                    self.ui?.dismissEditProductView()
+                    self.ui?.showSuccesAlert(msg: String(describing: msg))
                 case .failure (let error):
-                    print(error)
+                    self.ui?.displayError(error)
                 }
             }
         }

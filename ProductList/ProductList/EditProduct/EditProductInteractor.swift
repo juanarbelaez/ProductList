@@ -10,14 +10,14 @@ import Foundation
 
 protocol EditProductInteractable: AnyObject {
     
-    func setNewProduct(productDictionary : [String:Any], completion: @escaping (Result<Any, Error>) -> Void)
-    func updateProduct(productDictionary: [String: Any], completion: @escaping (Result<Any, Error>) -> Void)
+    func setNewProduct(productDictionary : [String:Any], completion: @escaping (Result<Any, NetworkError>) -> Void)
+    func updateProduct(productDictionary: [String: Any], completion: @escaping (Result<Any, NetworkError>) -> Void)
 }
 
 
 class EditProductInteractor: EditProductInteractable {
     
-    func setNewProduct(productDictionary: [String : Any], completion: @escaping (Result<Any, Error>) -> Void) {
+    func setNewProduct(productDictionary: [String : Any], completion: @escaping (Result<Any, NetworkError>) -> Void) {
         
         let requestModel = RequestModel(endpoint: .products, httpMethod: .POST)
         let url = requestModel.getURL()
@@ -33,7 +33,7 @@ class EditProductInteractor: EditProductInteractable {
             options: [.prettyPrinted, .sortedKeys])
             urlRequest.httpBody = requestBody
         } catch {
-            completion(.failure(error))
+            completion(.failure(NetworkError.decodingError))
             return
         }
         
@@ -42,19 +42,22 @@ class EditProductInteractor: EditProductInteractable {
             DispatchQueue.main.async {
                 
                 guard let response  = response as? HTTPURLResponse, error == nil else {
-                    completion(.failure(error!))
+                    completion(.failure(NetworkError.serverError))
                     return
                 }
                     
                 if response.statusCode == 200 {
-                        completion(.success("El Producto ha sido agragado con exito"))
+                        completion(.success("El Producto ha sido agregado con exito"))
+                }else {
+                    completion(.failure(.decodingError))
+                    return
                 }
                 
             }
         }.resume()
     }
     
-    func updateProduct(productDictionary: [String: Any], completion: @escaping (Result<Any, Error>) -> Void) {
+    func updateProduct(productDictionary: [String: Any], completion: @escaping (Result<Any, NetworkError>) -> Void) {
        
         let requestModel = RequestModel(endpoint: .products, httpMethod: .PUT)
         let url = requestModel.getURL(withId: String(describing: productDictionary["id"]!))
@@ -70,12 +73,15 @@ class EditProductInteractor: EditProductInteractable {
             DispatchQueue.main.async {
                 
                 guard let response  = response as? HTTPURLResponse, error == nil else {
-                    completion(.failure(error!))
+                    completion(.failure(.serverError))
                     return
                 }
                 
                 if response.statusCode == 200 {
                     completion(.success("El Producto ha sido editado con exito"))
+                } else {
+                    completion(.failure(.decodingError))
+                    return
                 }
             }
         }.resume()
